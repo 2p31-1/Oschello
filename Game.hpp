@@ -6,17 +6,21 @@
 #include <string>
 
 #define SIZE 8
+#define BLACK 1
+#define WHITE -1
 
 using namespace std;
+
+
 
 class Board {
 	Board() {
 		//init
 		moves = 4;
-		board[27] = 1;
-		board[28] = -1;
-		board[35] = -1;
-		board[36] = 1;
+		board[(SIZE / 2 - 1)*SIZE + SIZE / 2 - 1] = BLACK;
+		board[(SIZE / 2 - 1)*SIZE + SIZE / 2] = WHITE;
+		board[SIZE / 2 * SIZE + SIZE / 2 - 1] = WHITE;
+		board[SIZE / 2 * SIZE + SIZE / 2] = BLACK;
 	}
 	Board(Board &b) { 
 		this->board = b.board;
@@ -38,16 +42,50 @@ class Board {
 	array<int, SIZE*SIZE> board{ 0 };
 	int moves;
 
+	pair<int, int>toXY(int pos) {
+		return make_pair(pos / SIZE, pos%SIZE);
+	}
+	int toINT(pair<int, int> pos) {
+		return pos.first*SIZE + pos.second;
+	}
+	//directions
+	const int dy[8]{
+		-1, -1, -1, 0, 0, 1, 1, 1
+	};
+	const int dx[8]{
+		-1, 0, 1, -1, 1, -1, 0, 1
+	};
+	int recursive_put(int dir, int pos, int team) {
+		if (pos < 0 || pos >= SIZE*SIZE)return 0;
+		if (board[pos] == team)return 1;
+
+		if (recursive_put(dir, pos + dir, team)) {
+			board[pos] = team;
+			return 1;
+		}
+	}
 	void put(int team, int pos) {
+		moves++;
 		board[pos] = team;
 		//othello works
 
+		for (int i = 0; i < 8; i++) {
+			
+		}
 	}
 
 	/*
 	get allowed positions
 	*/
 	vector<int> getAllowedPositions(int team) {
+
+	}
+
+	/*
+	Calculate the score of nowplaying board
+	AI checks if she can put better move.
+	*/
+	int getScore(Board &board) {
 
 	}
 
@@ -121,11 +159,4 @@ class UI {
 };
 
 class AI {
-	/*
-		Calculate the score of nowplaying board
-		AI checks if she can put better move.
-	*/
-	int getScore(Board &board) {
-
-	}
 };
