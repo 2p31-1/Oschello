@@ -56,10 +56,9 @@ class Board {
 		-1, 0, 1, -1, 1, -1, 0, 1
 	};
 	int recursive_put(int const dir, pair<int,int> const &pos, int const team) {
-		const int pos_int = toINT(pos);
-		if (pos_int < 0 || pos_int >= SIZE*SIZE || board[pos_int]==0)return 0;
-		if (board[pos_int] == team)return 1;
 		const pair<int, int> next = make_pair(pos.first + dy[dir], pos.second + dx[dir]);
+		const int pos_int = toINT(next);
+		if (board[pos_int] == team)return 1;
 		if (next.first < 0 || next.first >= SIZE || next.second < 0 || next.second >= SIZE) {
 			return 0;
 		}
@@ -74,7 +73,7 @@ class Board {
 		//othello works
 
 		for (int i = 0; i < 8; i++) {
-			//note : workplace
+			recursive_put(i, toXY(pos), team);
 		}
 	}
 
@@ -82,7 +81,7 @@ class Board {
 	get allowed positions
 	*/
 	vector<int> getAllowedPositions(int team) {
-
+		
 	}
 
 	/*
