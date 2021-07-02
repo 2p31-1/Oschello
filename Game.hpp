@@ -81,7 +81,8 @@ class Board {
 	get allowed positions
 	*/
 	vector<int> getAllowedPositions(int team) {
-		
+		vector<int> positions;
+
 	}
 
 	/*
