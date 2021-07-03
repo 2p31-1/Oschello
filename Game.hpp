@@ -16,6 +16,23 @@ using namespace std;
 	
 */
 class Board {
+	/*
+	Every allocation means :
+
+	1  2  3  4  5  6  7  8
+	A  0  1  2  3  4  5  6  7
+	B  8  9 10 11 12 13 14 15
+	C 16 17 18 19 20 21 22 23
+	D 24 25 26 27 28 29 30 31
+	E 32 33 34 35 36 37 38 39
+	F 40 41 42 43 44 45 46 47
+	G 48 49 50 51 52 53 54 55
+	H 56 57 58 59 60 61 62 63
+	*/
+	array<int, SIZE*SIZE> board{ 0 };
+	int moves;
+
+	//Constructors
 	Board() {
 		//init
 		moves = 4;
@@ -28,21 +45,6 @@ class Board {
 		this->board = b.board;
 		this->moves = b.moves;
 	}
-	/*
-		Every allocation means :
-
-		   1  2  3  4  5  6  7  8
-		A  0  1  2  3  4  5  6  7
-		B  8  9 10 11 12 13 14 15
-		C 16 17 18 19 20 21 22 23
-		D 24 25 26 27 28 29 30 31
-		E 32 33 34 35 36 37 38 39
-		F 40 41 42 43 44 45 46 47
-		G 48 49 50 51 52 53 54 55
-		H 56 57 58 59 60 61 62 63
-	*/
-	array<int, SIZE*SIZE> board{ 0 };
-	int moves;
 
 	/*
 		Coordinate Functions
@@ -67,7 +69,9 @@ class Board {
 	const int dx[8]{
 		-1, 0, 1, -1, 1, -1, 0, 1
 	};
-	int recursive_put(int const dir, pair<int,int> const &pos, int const team) {
+
+	//do moves
+	const int recursive_put(int const dir, pair<int,int> const &pos, int const team) {
 		const pair<int, int> next = make_pair(pos.first + dy[dir], pos.second + dx[dir]);
 		const int pos_int = toINT(next);
 		if (board[pos_int] == team)return 1;
@@ -79,6 +83,8 @@ class Board {
 			return 1;
 		}
 	}
+	//Presume that the new moves are already checked by getAllowedPositions().
+	//So there're nothings to do whether is it legal move or not.
 	void put(int team, int pos) {
 		moves++;
 		board[pos] = team;
@@ -92,9 +98,36 @@ class Board {
 	/*
 	get allowed positions
 	*/
-	vector<int> getAllowedPositions(int team) {
-		vector<int> positions;
+	bool recursive_getAllowedMoves(int const dir, pair<int, int> &pos, int const team) {
+		pos.first += dy[dir];
+		pos.second += dx[dir];
+		if (isAccessible(pos)) {
+			if (board[toINT(pos)] == team) {
 
+			}
+		}
+		else {
+			return false;
+		}
+	}
+	vector<int> getAllowedMoves(int team) {
+		vector<int> positions;
+		for (int y = 0; y < SIZE; y++) {
+			for (int x = 0; x < SIZE; x++) {
+				if (board[toINT(make_pair(y, x))] == 0) {
+					for (int i = 0; i < 8; i++) {
+						pair<int, int> next = make_pair(y + dy[i], x + dx[i]);
+						if (isAccessible(next)) {
+							if (board[toINT(next)] == -team) {
+								if (recursive_getAllowedMoves(i, next, team)) {
+									positions.push_back(toINT(make_pair(y, x)));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/*
