@@ -12,7 +12,9 @@
 using namespace std;
 
 
-
+/*
+	
+*/
 class Board {
 	Board() {
 		//init
@@ -42,12 +44,22 @@ class Board {
 	array<int, SIZE*SIZE> board{ 0 };
 	int moves;
 
-	pair<int, int>toXY(int const &pos) {
+	/*
+		Coordinate Functions
+	*/
+	const static pair<int, int>toXY(int const &pos) {
 		return make_pair(pos / SIZE, pos%SIZE);
 	}
-	int toINT(pair<int, int> const &pos) {
+	const static int toINT(pair<int, int> const &pos) {
 		return pos.first*SIZE + pos.second;
 	}
+	const static bool isAccessible(pair<int, int> coord) {
+		return (coord.first >= 0 && coord.first < SIZE && coord.second >= 0 && coord.second < SIZE);
+	}
+	const static bool isAccessible(int y, int x) {
+		return (y >= 0 && y < SIZE && x >= 0 && x < SIZE);
+	}
+
 	//directions
 	const int dy[8]{
 		-1, -1, -1, 0, 0, 1, 1, 1
@@ -89,14 +101,19 @@ class Board {
 	Calculate the score of nowplaying board
 	AI checks if she can put better move.
 	*/
-	int getScore(Board &board) {
-
+	static int getScore(Board &board, int team) {
+		int counter{ 0 };
+		for (int x : board.board) {
+			if (x == team)counter++;
+		}
+		return counter;
 	}
 
 };
 
 class UI {
-	void info() {
+public:
+	const static void info() {
 
 	}
 
@@ -113,7 +130,7 @@ class UI {
 	G 48 49 50 51 52 53 54 55
 	H 56 57 58 59 60 61 62 63
 	*/
-	int getNewPosition() {
+	const static int getNewPosition() {
 		string pos;
 		int y=-1, x=0;
 		cout << "\nNew Position : ";
@@ -143,17 +160,17 @@ class UI {
 		}
 		return y * SIZE + x;
 	}
-	string getInput() {
+	const static string getInput() {
 		string i;
 		cin >> i;
 		return i;
 	}
-	int getInt() {
+	const static int getInt() {
 		int i;
 		cin >> i;
 		return i;
 	}
-	void error(int e) {
+	const static void error(int e) {
 		string errormsg[] = {
 			"Unavailable Y-axis letter." //error 0
 			, "Unavailable X-axis number." //error 1
