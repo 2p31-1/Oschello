@@ -32,6 +32,7 @@ class Board {
 	array<int, SIZE*SIZE> board{ 0 };
 	int moves;
 
+public:
 	//Constructors
 	Board() {
 		//init
@@ -45,6 +46,10 @@ class Board {
 		this->board = b.board;
 		this->moves = b.moves;
 	}
+
+	//getter / setter
+	array<int, SIZE*SIZE>getBoard() { return board; }
+	int getNumberOfMoves() { return moves; }
 
 	/*
 		Coordinate Functions
@@ -83,6 +88,8 @@ class Board {
 			return 1;
 		}
 	}
+
+	//put moves, and do moves by calling recursive_put()
 	//Presume that the new moves are already checked by getAllowedPositions().
 	//So there're nothings to do whether is it legal move or not.
 	void put(int team, int pos) {
@@ -102,8 +109,15 @@ class Board {
 		pos.first += dy[dir];
 		pos.second += dx[dir];
 		if (isAccessible(pos)) {
-			if (board[toINT(pos)] == team) {
-
+			switch (board[toINT(pos)]*team) {
+			case 1: //if same team
+				return true;
+				break;
+			case -1: //if another team
+				return recursive_getAllowedMoves(dir, pos, team);
+				break;
+			default: //no any stones on this position
+				return false;
 			}
 		}
 		else {
@@ -128,6 +142,7 @@ class Board {
 				}
 			}
 		}
+		return positions;
 	}
 
 	/*
@@ -139,6 +154,10 @@ class Board {
 		for (int x : board.board) {
 			if (x == team)counter++;
 		}
+		if (board.board[0] == team)counter += 20;
+		if (board.board[SIZE-1] == team)counter += 20;
+		if (board.board[SIZE*(SIZE-1)] == team)counter += 20;
+		if (board.board[SIZE*SIZE-1] == team)counter += 20;
 		return counter;
 	}
 
