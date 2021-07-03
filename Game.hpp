@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <string>
+#include <iomanip>
 
 #define SIZE 8
 #define BLACK 1
@@ -165,8 +166,30 @@ public:
 
 class UI {
 public:
-	const static void info() {
+	const static void doPlayerTurn(Board &board, int team) {
 
+	}
+
+	const static int init() {
+		cout << "Oschello, the AI Othello game.\n";
+		cout << "Put your game mode";
+		return getInt();
+	}
+
+	const static void printBoard(Board &board) {
+		array<int, SIZE*SIZE>*p = &board.getBoard();
+		cout << "  ";
+		for (int x = 0; x < SIZE; x++) {
+			cout << setw(2) << x + 1;
+		}
+		cout << "\n";
+		for (int y = 0; y < SIZE; y++) {
+			cout << " " << char('A' + y);
+			for (int x = 0; x < SIZE; x++) {
+				cout << ((*p)[y*SIZE + x] == 0 ? "  " : ((*p)[y*SIZE + x] == BLACK) ? "○" : "●");
+			}
+			cout << "\n";
+		}
 	}
 
 	/*
@@ -231,5 +254,30 @@ public:
 	}
 };
 
+
 class AI {
+};
+
+class Game {
+	/*
+	gameMode
+	bit	black	white
+	0	00	player	player
+	1	01	player	AI
+	2	10	AI		Player
+	3	11	AI		AI
+	*/
+	int gameMode;
+	Board playboard{};
+public:
+	Game() {}
+	Game(int gameMode) { this->gameMode = gameMode; }
+	void play() {
+		UI::printBoard(playboard);
+		UI::getInt();
+	}
+
+	void init() {
+		gameMode = UI::init()%4;
+	}
 };
