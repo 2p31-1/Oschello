@@ -155,13 +155,30 @@ public:
 		for (int x : board.board) {
 			if (x == team)counter++;
 		}
+		if (counter == board.moves) return 2147483647;
 		if (board.board[0] == team)counter += 20;
 		if (board.board[SIZE-1] == team)counter += 20;
 		if (board.board[SIZE*(SIZE-1)] == team)counter += 20;
 		if (board.board[SIZE*SIZE-1] == team)counter += 20;
 		return counter;
 	}
-
+	
+	/*
+	Returns whether this done.
+	*/
+	bool isEnd(){
+		if(moves==SIZE*SIZE)return true;
+		
+	}
+	
+	/*
+	Returns that who won.
+	*/
+	int getWinner(){
+		int counter{0};
+		for (int x : board){
+			
+	}
 };
 
 class UI {
@@ -186,7 +203,7 @@ public:
 		for (int y = 0; y < SIZE; y++) {
 			cout << " " << char('A' + y);
 			for (int x = 0; x < SIZE; x++) {
-				cout << ((*p)[y*SIZE + x] == 0 ? "  " : ((*p)[y*SIZE + x] == BLACK) ? "○" : "●");
+				cout << ((*p)[y*SIZE + x] == 0 ? "  " : ((*p)[y*SIZE + x] == BLACK) ? "¡Û" : "¡Ü");
 			}
 			cout << "\n";
 		}
@@ -256,6 +273,7 @@ public:
 
 
 class AI {
+	
 };
 
 class Game {
